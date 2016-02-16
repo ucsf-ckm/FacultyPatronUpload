@@ -13,7 +13,7 @@ After successful completion, the marc records will be written to a file called "
 
 If you'd like to verify that this is a correct marc file using a different library than the one that was used to produce it, there is a short java script available.  Run java -cp .:lib/* ReadMarcExample out.dat to parse and print the marc records.  This script may help flag any errors that were produced in the marc file by the ruby script.  
 
-To run this script, you will need an EDS bind with access to the variables 
+To run this script, you will need an EDS bind with access to the variables and access to a REST service providing barcode information.  
 
 cn
 givenName
