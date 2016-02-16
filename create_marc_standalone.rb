@@ -5,15 +5,19 @@ require 'csv'
 require 'rest-client'
 require 'nokogiri'
 require 'set'
+require "open-uri"
+require 'yaml'
 
-ldap = Net::LDAP.new    :host => "",
-                        :port => 636,
+properties = YAML::load(File.open('properties.yml'))
+
+ldap = Net::LDAP.new    :host => properties["host"],
+                        :port => properties["port"],
                         :encryption => :simple_tls,
-                        :base => "",
+                        :base => properties["base"],
                         :auth => {
                             :method => :simple,
-                            :username => "",
-                            :password => ""
+                            :username => properties["username"],
+                            :password => properties["password"]
                         }
 
 result_attrs = [
@@ -57,6 +61,14 @@ File.readlines("pstat_titles.txt").each do |t|
   pstat_title[t[0].strip.upcase] = t[1]
 end
 
+barcode_nums = Hash.new
+# create a hash of uid to barcode
+open(properties["barcode_url"]) do |f|
+  f.each_line do |line| 
+    barcode_nums[line.split(",")[0]] = line.split(",")[2]
+  end
+end
+
 marcwriter = MARC::Writer.new('out.dat')
 
 search_filter = ~ Net::LDAP::Filter.eq("eduPersonPrimaryAffiliation", "student")
@@ -66,6 +78,7 @@ ldap.search(:filter => search_filter, :attributes => result_attrs, :return_resul
 
   # note - some records list 'Campus Address' as last name (with no first name)
   # this is in eds...
+  uid = item['uid']
   lastname = item['cn'][0].nil? ? "" : item['cn'][0].split(',')[0]
   firstname = item['givenName'][0].nil? ? "" : item['givenName'][0].split(',')[0] 
   address = item['postalAddress'][0].nil? ? "" : item['postalAddress'][0]
@@ -80,6 +93,12 @@ ldap.search(:filter => search_filter, :attributes => result_attrs, :return_resul
   title = title.delete(",")
   
   suffix = ''
+  
+  #puts ucid
+  #puts lastname
+  #puts "barcode"
+  #puts ucid
+  #puts barcode_nums[ucid]
   
   # filtering out students, which are handled through a different upload process
   if (eduPersonPrimaryAffiliation != "student")
@@ -147,7 +166,7 @@ ldap.search(:filter => search_filter, :attributes => result_attrs, :return_resul
     end
 
     #no barcode information for now, may add this in later
-    #record.append(MARC::DataField.new('30',' ',' ',['a', barcode]))
+    record.append(MARC::DataField.new('30',' ',' ',['a', barcode_nums[ucid]]))
 
     record.append(MARC::DataField.new('100',' ', ' ', ['a', "#{lastname}#{suffix}, #{firstname}"]))
 
