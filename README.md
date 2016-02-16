@@ -26,6 +26,20 @@ title
 
 https://wiki.library.ucsf.edu/display/IAM/EDS+Attributes
 
+Windows Executable
+
+If you want to install the app on a windows workstation without requiring a ruby installation,
+you can create a Ruby executable file (that will have ruby and all necessary gems included).
+
+http://rubyonwindows.blogspot.com/2009/05/ocra-one-click-ruby-application-builder.html
+
+you do need to be on a windows machine, this won't work on Mac
+
+gem install orca
+
+orca create_marc_standalone.rb
+
+This will create an .exe file with no external ruby dependencies.  
 
 
 
