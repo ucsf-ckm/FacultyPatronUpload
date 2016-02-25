@@ -5,7 +5,7 @@ require 'csv'
 require 'rest-client'
 require 'nokogiri'
 require 'set'
-require "open-uri"
+require 'open-uri'
 require 'yaml'
 
 properties = YAML::load(File.open('properties.yml'))
@@ -63,7 +63,7 @@ end
 
 barcode_nums = Hash.new
 # create a hash of uid to barcode
-open(properties["barcode_url"]) do |f|
+open(properties["barcode_url"], {ssl_verify_mode: OpenSSL::SSL::VERIFY_NONE}) do |f|
   f.each_line do |line| 
     barcode_nums[line.split(",")[0]] = line.split(",")[2]
   end

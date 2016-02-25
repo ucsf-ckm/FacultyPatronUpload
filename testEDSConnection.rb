@@ -1,8 +1,9 @@
 require 'rubygems'
 require 'net/ldap'
 require 'yaml'
+require 'properties.yml'
 
-properties = YAML::load(File.open('./properties.yml'))
+properties = YAML::load(File.open('properties.yml'))
 
 ldap = Net::LDAP.new    :host => properties["host"],
                         :port => properties["port"],

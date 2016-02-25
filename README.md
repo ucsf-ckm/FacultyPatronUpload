@@ -41,6 +41,13 @@ orca create_marc_standalone.rb
 
 This will create an .exe file with no external ruby dependencies.  
 
+NOTE: to install this on windows, you will need to install the DevKit as well as Ruby 2.0.0
+Don't try to use 2.1.8, there's a path problem for ocra.  
+
+http://rubyinstaller.org/add-ons/devkit
+follow the instructions at
+https://github.com/oneclick/rubyinstaller/wiki/development-kit
+
 
 
 
