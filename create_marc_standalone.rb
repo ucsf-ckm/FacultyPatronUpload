@@ -61,6 +61,9 @@ File.readlines("pstat_titles.txt").each do |t|
   pstat_title[t[0].strip.upcase] = t[1]
 end
 
+puts "**pstat_titles"
+puts pstat_title
+
 barcode_nums = Hash.new
 # create a hash of uid to barcode
 open(properties["barcode_url"], {ssl_verify_mode: OpenSSL::SSL::VERIFY_NONE}) do |f|
