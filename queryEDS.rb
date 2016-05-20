@@ -26,7 +26,7 @@ result_attrs = [
   "eduPersonPrimaryAffiliation",
   "eduPersonOrgDN",
   "eduPersonAffiliation",
-  "postalAddress",
+  "street",
   "uid", 
   "ucsfEduStuRegistrationStatusCode",
   "givenName",
@@ -51,7 +51,8 @@ result_attrs = [
   "title"
   ]
   
-search_filter = Net::LDAP::Filter.eq("mail", "Andres.Panado@ucsf.edu")
+search_filter = Net::LDAP::Filter.eq("mail", "John.Fahy@ucsf.edu")
+  
   
 # Execute search
 ldap.search(:filter => search_filter, :attributes => result_attrs, :return_result => false) { |item| 
@@ -72,7 +73,11 @@ ldap.search(:filter => search_filter, :attributes => result_attrs, :return_resul
   title = title.strip.upcase
   title = title.delete(",")
  
-  puts item['eduPersonPrincipalName']
+  puts item.inspect
+ 
+  if item['eduPersonAffiliation'].include?('faculty')
+    puts item['eduPersonAffiliation']
+  end
   
 }
   

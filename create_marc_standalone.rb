@@ -38,7 +38,6 @@ result_attrs = [
   "ucsfEduStuRegistrationStatusCode",
   "givenName",
   "cn",
-  "postalAddress",
   "l", 
   "st",
   "postalCode",
@@ -91,9 +90,11 @@ ldap.search(:filter => search_filter, :attributes => result_attrs, :return_resul
   emailaddr = item['mail'][0].nil? ? "" : item['mail'][0]
   ucid = item['ucsfEduIDNumber'][0].nil? ? "" :  item['ucsfEduIDNumber'][0]
   eduPersonPrimaryAffiliation = item['eduPersonPrimaryAffiliation'][0].nil? ? "" : item['eduPersonPrimaryAffiliation'][0]
-  title = item['title'][0].nil? ? "" : item['title'][0]
-  title = title.strip.upcase
-  title = title.delete(",")
+
+  #title = item['title'][0].nil? ? "" : item['title'][0]
+  
+  titles = item['title']
+  
   
   suffix = ''
   
@@ -131,11 +132,29 @@ ldap.search(:filter => search_filter, :attributes => result_attrs, :return_resul
     #based on title...
     pstatcode = ""   
         
-    if pstat_title[title].nil?
-      pstatcode = nil
-    else
-      pstatcode = pstat_title[title]
-    end         
+        
+    # some records have more than one title associated
+    # if there is a more specific faculty or non-staff title
+    # we should use it.  General staff has a pstat code of 50
+    # so if we find a pstat that is not 50, use it.  
+      
+    titles.each do |title|
+      title = title.strip.upcase
+      title = title.delete(",")    
+        
+      if pstat_title[title].nil?
+        pstatcode = nil
+      else
+        pstatcode = pstat_title[title]
+      end
+      
+      if pstatcode.to_i > 50 || pstatcode.to_i < 50
+        break
+      end
+               
+    end
+    puts "**"
+    puts pstatcode
     
     if pstatcode.nil?
         @missing.add("Could not figure pstat title for #{title}")
@@ -175,14 +194,16 @@ ldap.search(:filter => search_filter, :attributes => result_attrs, :return_resul
 
     record.append(MARC::DataField.new('100',' ', ' ', ['a', "#{lastname}#{suffix}, #{firstname}"]))
 
-    record.append(MARC::DataField.new('220', ' ',  ' ', ['a', "#{address}"]))
+    # a is the primary work address, which we don't we will use work as the secondary
+    record.append(MARC::DataField.new('220', ' ',  ' ', ['h', "#{address}"]))
     
     # Blank out the areacode if there's no phone number
     if phone.eql?('') 
       areacode='' 
     end
 
-    record.append(MARC::DataField.new('225', ' ',  ' ', ['a', "#{areacode} #{phone}"]))
+    # use work number as secondary phone number
+    record.append(MARC::DataField.new('225', ' ',  ' ', ['p', "#{areacode} #{phone}"]))
 
     record.append(MARC::DataField.new('600', ' ',  ' ', ['a', emailaddr]))
 
