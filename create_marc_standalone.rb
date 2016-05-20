@@ -74,7 +74,9 @@ end
 
 marcwriter = MARC::Writer.new('out.dat')
 
-search_filter = ~ Net::LDAP::Filter.eq("eduPersonPrimaryAffiliation", "student")
+#search_filter = ~ Net::LDAP::Filter.eq("eduPersonPrimaryAffiliation", "student")
+
+search_filter = Net::LDAP::Filter.eq("mail", "Andres.Panado@ucsf.edu")
 
 # Execute search
 ldap.search(:filter => search_filter, :attributes => result_attrs, :return_result => false) { |item| 
@@ -156,17 +158,19 @@ ldap.search(:filter => search_filter, :attributes => result_attrs, :return_resul
     year = Time.new.year.to_s[2..-1].to_i
     month = Time.new.month.to_s
 
+    # update - for non-students, we will have a 5 year expiration date in all cases
+    # 
     # visiting undergraduates and graduates have a pstat of 4
-    if pstatcode.to_i == 4
-      expyear = year + 1
-      record.append(MARC::DataField.new('078',' ', ' ',['a', '09-17-' + expyear.to_s]))
-    elsif (10..14) === pstatcode.to_i
+    #if pstatcode.to_i == 4
+    #  expyear = year + 1
+    #  record.append(MARC::DataField.new('078',' ', ' ',['a', '09-17-' + expyear.to_s]))
+    #elsif (10..14) === pstatcode.to_i
       expyear = year + 5
       record.append(MARC::DataField.new('078',' ', ' ',['a', '12-31-' + expyear.to_s]))
-    else
-      expyear = year + 1
-      record.append(MARC::DataField.new('078',' ', ' ',['a', month + '-31-' + expyear.to_s]))
-    end
+    #else
+    #  expyear = year + 1
+    #  record.append(MARC::DataField.new('078',' ', ' ',['a', month + '-31-' + expyear.to_s]))
+    #end
 
     #no barcode information for now, may add this in later
     record.append(MARC::DataField.new('30',' ',' ',['a', barcode_nums[ucid]]))

@@ -1,18 +1,2 @@
 Could not figure pstat title for 
-Could not figure pstat title for CYTO TCHNO SUPV
-Could not figure pstat title for BLANK AST 2 PD
-Could not figure pstat title for EEG TCHNO PRN PD
-Could not figure pstat title for SYS ADMST MGR 2
-Could not figure pstat title for DEPARTMENT CHAIR
-Could not figure pstat title for SYS
-Could not figure pstat title for FINANCIAL SVC ANL 2
-Could not figure pstat title for ADMIN NURSE 2
-Could not figure pstat title for SYS ADMST MGR 1
-Could not figure pstat title for TCHL PROJECT MGT PROFL 2 GF
-Could not figure pstat title for SPEECH PATHOLOGIST 3
-Could not figure pstat title for SYS ADMST SUPV 1
-Could not figure pstat title for SYS ADMST SUPV 2
-Could not figure pstat title for CLIN NURSE SUPV 2
-Could not figure pstat title for FINANCIAL ANL MGR 3
 Could not figure pstat title for SYS ADMST MGR 4
-Could not figure pstat title for CLIN SOCIAL WORKER 1
