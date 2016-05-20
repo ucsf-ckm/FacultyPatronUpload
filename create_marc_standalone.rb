@@ -74,9 +74,7 @@ end
 
 marcwriter = MARC::Writer.new('out.dat')
 
-#search_filter = ~ Net::LDAP::Filter.eq("eduPersonPrimaryAffiliation", "student")
-
-search_filter = Net::LDAP::Filter.eq("mail", "Andres.Panado@ucsf.edu")
+search_filter = ~ Net::LDAP::Filter.eq("eduPersonPrimaryAffiliation", "student")
 
 # Execute search
 ldap.search(:filter => search_filter, :attributes => result_attrs, :return_result => false) { |item| 
